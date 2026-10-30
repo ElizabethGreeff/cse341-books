@@ -4,6 +4,7 @@ let database;
 
 const connectToDb = async () => {
     const connectionString = process.env.MONGODB_URI;
+
     if (!connectionString) {
         throw new Error('MONGODB_URI is required.');
     }
@@ -11,7 +12,15 @@ const connectToDb = async () => {
     const client = new MongoClient(connectionString);
     await client.connect();
     database = client.db(process.env.MONGODB_DB_NAME || 'practice');
+    console.log('Connected to MongoDB');
     return database;
 };
 
-export { connectToDb };
+const getDb = () => {
+    if (!database) {
+        throw new Error('Database not initialized. Call connectToDb first.');
+    }
+    return database;
+};
+
+export { connectToDb, getDb };
